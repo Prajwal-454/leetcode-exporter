@@ -197,6 +197,15 @@ class LeetCodeExporter:
                     self._api.throttle()
 
                     if sub and sub["timestamp"] <= saved_ts:
+                        self._downloaded.append({
+                            "question_id": qid,
+                            "title": title,
+                            "title_slug": title_slug,
+                            "difficulty": difficulty,
+                            "tags": tags,
+                            "language": metadata[title_slug].get("language", "Unknown"),
+                            "timestamp": saved_ts,
+                        })
                         progress.advance(task)
                         continue
                 else:
