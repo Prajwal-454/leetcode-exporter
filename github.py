@@ -107,6 +107,8 @@ class GitManager:
 
         if not self.has_changes():
             console.log("[dim]No changes to commit.[/dim]")
+            if self._remote_url:
+                self._push()
             return False
 
         try:
