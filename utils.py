@@ -155,6 +155,16 @@ def generate_problem_readme(
 """
 
 
+def _get_sort_key(p: dict[str, Any]) -> tuple[int, str]:
+    """Helper to safely extract a numeric sort key from a question ID."""
+    qid = str(p.get("question_id", "0"))
+    try:
+        return (int(qid), "")
+    except ValueError:
+        digits = "".join(c for c in qid if c.isdigit())
+        return (int(digits) if digits else 0, qid)
+
+
 def generate_repo_readme(
     problems: list[dict[str, Any]],
     last_updated: str | None = None,
@@ -182,7 +192,7 @@ def generate_repo_readme(
     updated = last_updated or datetime.now(tz=timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
     # Sort problems by ID
-    sorted_problems = sorted(problems, key=lambda p: int(p.get("question_id", 0)))
+    sorted_problems = sorted(problems, key=_get_sort_key)
 
     # Build problem table rows
     table_rows = []
@@ -255,7 +265,7 @@ def export_to_csv(problems: list[dict[str, Any]], output_path: Path) -> Path:
         Path to the created CSV file.
     """
     csv_path = output_path / "solutions.csv"
-    sorted_problems = sorted(problems, key=lambda p: int(p.get("question_id", 0)))
+    sorted_problems = sorted(problems, key=_get_sort_key)
 
     fieldnames = [
         "ID", "Title", "Difficulty", "Language", "Tags", "URL", "Date Solved"
