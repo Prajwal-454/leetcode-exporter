@@ -121,10 +121,14 @@ class GitManager:
             console.log(f'[green]✓ Committed: "{message}"[/green]')
 
             # Ensure local branch name matches the expected remote branch
-            current_branch = self._repo.active_branch.name
+            try:
+                current_branch = self._repo.active_branch.name
+            except TypeError:
+                current_branch = None
+
             if current_branch != self._branch:
-                self._repo.git.branch("-M", self._branch)
-                console.log(f"[dim]Renamed local branch '{current_branch}' to '{self._branch}'[/dim]")
+                self._repo.git.checkout("-B", self._branch)
+                console.log(f"[dim]Checked out and switched to branch '{self._branch}'[/dim]")
 
             # Push if remote is configured
             if self._remote_url:
