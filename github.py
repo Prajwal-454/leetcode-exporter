@@ -109,6 +109,8 @@ class GitManager:
             console.log("[dim]No changes to commit.[/dim]")
             if self._remote_url:
                 self._push()
+            else:
+                console.log("[yellow]⚠ GITHUB_REPO is missing in .env! Skipping push.[/yellow]")
             return False
 
         try:
@@ -133,6 +135,8 @@ class GitManager:
             # Push if remote is configured
             if self._remote_url:
                 self._push()
+            else:
+                console.log("[yellow]⚠ GITHUB_REPO is missing in .env! Skipping push.[/yellow]")
 
             return True
 
